@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Catalogue</title>
+</head>
+<body>
+
+    <h1>Book Catalogue</h1>
+    <div id="bookList"></div>
+
+    <script>
+        fetch('book.xml')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Fetch error: ' + response.status);
+                }
+                return response.text();
+            })
+            .then(xmlText => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(
+                    xmlText, 'text/xml'
+                );
+
+                const books = xmlDoc.getElementsByTagName('book');
+                const bookList = document.getElementById('bookList');
+
+                for (let i = 0; i < books.length; i++) {
+                    const title = books[i]
+                        .getElementsByTagName('title')[0]
+                        .textContent;
+                    const author = books[i]
+                        .getElementsByTagName('author')[0]
+                        .textContent;
+                    const price = books[i]
+                        .getElementsByTagName('price')[0]
+                        .textContent;
+
+                    const book = document.createElement('div');
+                    book.innerHTML =
+                        '<h2>' + title + '</h2>' +
+                        '<p>Author: ' + author + '</p>' +
+                        '<p>Price: $' + price + '</p>';
+
+                    bookList.appendChild(book);
+                }
+            })
+            .catch(err => console.error('Fetch error: ' + err.message));
+    </script>
+
+</body>
+</html>
