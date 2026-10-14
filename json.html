@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profiles</title>
+</head>
+<body>
+
+    <h1>User Profiles</h1>
+    <div id="userList"></div>
+
+    <script>
+        fetch('userProfiles.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Fetch error: ' + response.status);
+                } else {
+                    return response.json();
+                }
+            })
+            .then(json => {
+                const userList = document.getElementById('userList');
+
+                json.forEach(user => {
+                    const profile = document.createElement('div');
+
+                    profile.innerHTML =
+                        '<hr>' +
+                        '<h2>' + user.firstName + ' ' + user.lastName + '</h2>' +
+                        '<p>Email: ' + user.email + '</p>' +
+                        '<p>Date of Birth: ' + user.dateOfBirth + '</p>' +
+                        '<h3>Address</h3>' +
+                        '<p>Street: ' + user.address.street + '</p>' +
+                        '<p>City: ' + user.address.city + '</p>' +
+                        '<p>State: ' + user.address.state + '</p>' +
+                        '<p>Zip Code: ' + user.address.zipCode + '</p>' +
+                        '<h3>Preferences</h3>' +
+                        '<p>Theme: ' + user.preferences.theme + '</p>' +
+                        '<p>Language: ' + user.preferences.language + '</p>' +
+                        '<p>Notifications: ' + user.preferences.notifications + '</p>' +
+                        '<p>Newsletter Subscription: ' +
+                        user.preferences.subscription + '</p>';
+
+                    userList.appendChild(profile);
+                });
+            })
+            .catch(err => console.error('Fetch error: ' + err.message));
+    </script>
+
+</body>
+</html>
